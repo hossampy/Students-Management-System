@@ -33,46 +33,42 @@
                     role="menu"
                     data-accordion="false"
                 >
-                    <!-- <li class="nav-item menu-open">
-                      <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>
-                          Starter Pages
-                          <i class="right fas fa-angle-left"></i>
-                        </p>
-                      </a>
-                      <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                          <a href="#" class="nav-link active">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Active Page</p>
-                          </a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="#" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Inactive Page</p>
-                          </a>
-                        </li>
-                      </ul>
-                    </li> -->
+
                     <li class="nav-item">
-                        <Link :href="route('contact')" class="nav-link">
+                        <Link :href="route('niveauScolaire.index')" class="nav-link" :class="{'active': $page.component=='NiveauScolaire/index'}">
                             <i class="nav-icon fas fa-th"></i>
                             <p>
-                                Contact
+                                Niveau scolaire
                             </p>
                         </Link>
                     </li>
 
-                    <li class="nav-item">
-                        <Link :href="route('home')" class="nav-link">
-                            <i class="nav-icon fas fa-th"></i>
+                    <li class="nav-item" :class="{'menu-open': $page.component.startsWith('Etudiant/')}">
+                        <a href="#" class="nav-link" :class="{'active': $page.component.startsWith('Etudiant/')}">
+                            <i class="nav-icon fas fa-users"></i>
                             <p>
-                                Home
+                                Etudiants
+                                <i class="right fas fa-angle-left"></i>
                             </p>
-                        </Link>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <Link :href="route('Etudiant.index')" class="nav-link" :class="{'active': $page.component =='Etudiant/index'}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tous</p>
+                                </Link>
+                            </li>
+                            <li class="nav-item">
+                                <Link :href="route('Etudiant.create')" class="nav-link" :class="{'active': $page.component == 'Etudiant/create'}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Nouveau</p>
+                                </Link>
+                            </li>
+                        </ul>
                     </li>
+
+
+
                 </ul>
             </nav>
         </div>
