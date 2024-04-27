@@ -8,20 +8,33 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('etudiants', function (Blueprint $table) {
             $table->id();
+            $table->string("nom");
+            $table->string("prenom");
+            $table->char("sexe");
+            $table->integer("age");
+            $table->foreignId("niveau_scolaire_id")->constrained();
+            $table->string("photo")->nullable();
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('students');
+        Schema::table(function(Blueprint $table){
+            $table->dropConstrainedForeignId("niveau_scolaire_id");
+        });
+        Schema::dropIfExists('etudiants');
     }
 };

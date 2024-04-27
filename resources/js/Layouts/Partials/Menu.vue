@@ -53,13 +53,13 @@
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
-                                <Link :href="route('Etudiant.index')" class="nav-link" :class="{'active': $page.component =='Etudiant/index'}">
+                                <Link :href="route('etudiant.index')" class="nav-link" :class="{'active': $page.component =='Etudiant/index'}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Tous</p>
                                 </Link>
                             </li>
                             <li class="nav-item">
-                                <Link :href="route('Etudiant.create')" class="nav-link" :class="{'active': $page.component == 'Etudiant/create'}">
+                                <Link :href="route('etudiant.create')" class="nav-link" :class="{'active': $page.component == 'Etudiant/create'}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Nouveau</p>
                                 </Link>

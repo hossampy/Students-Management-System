@@ -15,7 +15,7 @@ Route::get('/contact', function () {
     return Inertia::render('contact');
 })->name('contact');
 
-Route::resource('Etudiant', EtudiantController::class);
+Route::resource('etudiant', EtudiantController::class);
 Route::resource('niveauScolaire', NiveauScolaireController::class);
 
 

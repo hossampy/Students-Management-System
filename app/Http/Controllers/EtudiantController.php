@@ -12,8 +12,8 @@ class EtudiantController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        return Inertia::render('Etudiant/index');
+    { $etudiants = etudiant::with( 'niveau_scolaire')->get();
+     return Inertia::render('Etudiant/index', ['etudiants'=>$etudiants]);
     }
 
     /**
@@ -21,8 +21,7 @@ class EtudiantController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Etudiant/create');
-    }
+        return Inertia::render('Etudiant/create');    }
 
     /**
      * Store a newly created resource in storage.

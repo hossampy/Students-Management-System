@@ -1,6 +1,14 @@
 <script setup>
+import { onMounted } from 'vue';
 import Layouts from "@/Layouts/MainLayout.vue";
+const prop =defineProps({
+    etudiants: Array
+});
 
+
+onMounted(() => {
+    console.log(prop.etudiants);
+});
 </script>
 
 <template>
@@ -16,8 +24,30 @@ import Layouts from "@/Layouts/MainLayout.vue";
         </div>
 
         <div class="content">
-            <div class="container-fluid">
-                <h1>mon Etudiant</h1>
+            <div class="container-fluid" >
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">id</th>
+                        <th scope="col">nom</th>
+                        <th scope="col">prenom</th>
+                        <th scope="col">niveau</th>
+
+                    </tr>
+                    </thead>
+                    <thead class="thead-light" v-for="etudiant in etudiants" :key="etudiant.id" >
+                    <tr >
+                        <th scope="col">{{etudiant.id}}</th>
+                        <th scope="col">{{etudiant.nom}}</th>
+                        <th scope="col">{{etudiant.prenom}}</th>
+                        <th scope="col">{{etudiant.niveau_scolaire.nom}}</th>
+
+                    </tr>
+                    </thead>
+                    <tbody  >
+
+                    </tbody>
+                </table>
             </div>
         </div>
 

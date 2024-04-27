@@ -12,8 +12,10 @@ class NiveauScolaireController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        return Inertia::render('NiveauScolaire/index');
+
+    { $niveauscolaires = NiveauScolaire::orderBy('nom', 'asc')->paginate(3);
+
+        return Inertia::render('NiveauScolaire/index', ['niveauscolaires'=>$niveauscolaires]);
     }
 
     /**
