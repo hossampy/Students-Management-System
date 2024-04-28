@@ -13,9 +13,9 @@ class NiveauScolaireController extends Controller
      */
     public function index()
 
-    { $niveauscolaires = NiveauScolaire::orderBy('nom', 'asc')->paginate(3);
+    { $niveauscolaires = NiveauScolaire::orderBy('nom', 'asc')->paginate(5);
 
-        return Inertia::render('NiveauScolaire/index', ['niveauscolaires'=>$niveauscolaires]);
+        return Inertia::render('NiveauScolaire/indexNiveauScolaire', ['niveauscolaires'=>$niveauscolaires]);
     }
 
     /**
@@ -31,7 +31,15 @@ class NiveauScolaireController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+       $request->validate([
+           'nom' => 'required|string|min:3',
+
+         ]);
+        $model = new NiveauScolaire();
+        $model->nom = $request->input('nom');
+        $model->save();
+        return redirect()->route('niveauScolaire.index')->with('success', 'Niveau scolaire ajouté avec succès');
     }
 
     /**

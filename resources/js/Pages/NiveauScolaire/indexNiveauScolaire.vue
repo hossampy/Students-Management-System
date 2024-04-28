@@ -1,14 +1,16 @@
 <script setup>
 import { defineProps, onMounted } from 'vue';
-import Pagination from '@/Pagination.vue';
+import Pagination from '@/Shared/Pagination.vue';
 import {Link} from "@inertiajs/vue3";
 import Layouts from "@/Layouts/MainLayout.vue";
+import CreateNiveauScolaire from "@/Pages/NiveauScolaire/CreateNiveauScolaire.vue";
 const prop = defineProps({
     niveauscolaires: Object
 });
+/*
 onMounted(() => {
     console.log(prop.niveauscolaires);
-});
+});*/
 </script>
 
 <template>
@@ -30,14 +32,10 @@ onMounted(() => {
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title"></h3>
-                                <div class="card-tools">
-                                    <Pagination
-                                        :links="niveauscolaires.links"
-                                        :prev="niveauscolaires.prev_page_url"
-                                        :next="niveauscolaires.next_page_url" />
-
+                                <div>
+                                    <CreateNiveauScolaire />
                                 </div>
+
                             </div>
 
                             <div class="card-body p-0">
@@ -60,10 +58,19 @@ onMounted(() => {
                                     </tr>
                                     </tbody>
                                 </table>
+
                             </div>
+
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="card-tools m-3">
+                <Pagination
+                    :links="niveauscolaires.links"
+                    :prev="niveauscolaires.prev_page_url"
+                    :next="niveauscolaires.next_page_url" />
+
             </div>
         </div>
 
