@@ -16,7 +16,9 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::resource('etudiant', EtudiantController::class);
+
 Route::resource('niveauScolaire', NiveauScolaireController::class);
+
 
 
 

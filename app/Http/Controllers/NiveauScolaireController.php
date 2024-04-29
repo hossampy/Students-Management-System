@@ -33,7 +33,7 @@ class NiveauScolaireController extends Controller
     {
 
        $request->validate([
-           'nom' => 'required|string|min:3',
+           'nom' => 'required|string|min:3|unique:niveau_scolaires,nom'
 
          ]);
         $model = new NiveauScolaire();
@@ -55,7 +55,8 @@ class NiveauScolaireController extends Controller
      */
     public function edit(NiveauScolaire $niveauScolaire)
     {
-        //
+
+        return response()->json(['NiveauScolaire' => $niveauScolaire]);
     }
 
     /**
@@ -63,7 +64,14 @@ class NiveauScolaireController extends Controller
      */
     public function update(Request $request, NiveauScolaire $niveauScolaire)
     {
-        //
+        $request->validate([
+            'nom' => 'required|string|min:3|unique:niveau_scolaires,nom,'.$niveauScolaire->id
+        ]);
+       if($request->input('nom')!= $niveauScolaire->nom) {
+           $niveauScolaire->nom = $request->input('nom');
+           $niveauScolaire->save();
+       }
+        return redirect()->route('niveauScolaire.index')->with('success', 'Niveau scolaire modifié avec succès');
     }
 
     /**
@@ -71,6 +79,10 @@ class NiveauScolaireController extends Controller
      */
     public function destroy(NiveauScolaire $niveauScolaire)
     {
-        //
+        if ($niveauScolaire->etudiants->count() > 0) {
+            return redirect()->route('niveauScolaire.index')->with('error', 'Impossible de supprimer ce niveau scolaire car il est associé à des étudiants');
+        };
+        $niveauScolaire->delete();
+        return redirect()->route('niveauScolaire.index')->with('success', 'Niveau scolaire supprimé avec succès');
     }
 }

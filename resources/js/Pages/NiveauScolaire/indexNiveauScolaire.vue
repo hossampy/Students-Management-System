@@ -1,17 +1,4 @@
-<script setup>
-import { defineProps, onMounted } from 'vue';
-import Pagination from '@/Shared/Pagination.vue';
-import {Link} from "@inertiajs/vue3";
-import Layouts from "@/Layouts/MainLayout.vue";
-import CreateNiveauScolaire from "@/Pages/NiveauScolaire/CreateNiveauScolaire.vue";
-const prop = defineProps({
-    niveauscolaires: Object
-});
-/*
-onMounted(() => {
-    console.log(prop.niveauscolaires);
-});*/
-</script>
+
 
 <template>
     <Layouts>
@@ -50,9 +37,9 @@ onMounted(() => {
                                     <tr v-for="niveauScolaire in niveauscolaires.data">
                                         <td>{{niveauScolaire.nom}}</td>
                                         <td>
-                                            <div class="d-flex justify-items-center">
-                                                <button class="btn btn-info mr-2"><i class="fas fa-pen"></i></button>
-                                                <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                            <div  class="d-flex justify-items-center">
+                                                <button @click="openEditModal(niveauScolaire.id)" class="btn btn-info mr-2"><i class="fas fa-pen"></i></button>
+                                                <button @click="deletelevel(niveauScolaire.id)"  class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -72,10 +59,70 @@ onMounted(() => {
                     :next="niveauscolaires.next_page_url" />
 
             </div>
+            <EditNiveauScolaire
+                :niveauScolaireId="editingElementId"
+                :show="showModal"
+                @modalClosed="modalClosed"
+            />
         </div>
 
     </Layouts>
 </template>
+<script setup>
+import {defineProps, onMounted, ref} from 'vue';
+import Pagination from '@/Shared/Pagination.vue';
+import {Link} from "@inertiajs/vue3";
+import Layouts from "@/Layouts/MainLayout.vue";
+import CreateNiveauScolaire from "@/Pages/NiveauScolaire/CreateNiveauScolaire.vue";
+import EditNiveauScolaire from "@/Pages/NiveauScolaire/EditNiveauScolaire.vue";
+import {useSwallError,useSwallSuccess} from "@/Composables/alert.js";
+import {Inertia} from "@inertiajs/inertia";
+
+const prop = defineProps({
+    niveauscolaires: Object
+});
+
+
+
+let showModal = ref('false');
+let editingElementId = ref(null);
+const   openEditModal = (id) => {
+   showModal.value = true;
+    editingElementId.value = id;
+}
+const modalClosed = ()=>{
+    editingElementId.value = null;
+    showModal.value = false
+}
+
+const deletelevel = (id) => {
+    if (confirm('Are you sure you want to delete this level?')) {
+        axios.post(
+            route("niveauScolaire.destroy",  id ),
+        {
+            _method: 'DELETE',
+        }
+        )
+            .then((response) => {
+                // Handle success response
+                // Display a success message using useSwallSuccess
+                useSwallSuccess("Niveau scolaire supprimé avec succès!");
+                // Optionally, you can reload the page after successful deletion
+                // window.location.reload();
+                // Reload the page without preserving the component state
+
+                Inertia.reload({preserveState: false});
+
+            })
+            .catch((error) => {
+                // Handle error response
+                // Display an error message using useSwallError
+                useSwallError(error.response.data.message ?? "Une erreur a été rencontrée");
+            });
+    }
+};
+
+</script>
 
 <style scoped>
 

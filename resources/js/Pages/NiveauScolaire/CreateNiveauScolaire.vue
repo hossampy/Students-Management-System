@@ -8,7 +8,7 @@ import {onMounted, ref} from "vue";
 let createModal = null;
 let nomNiveauScolaire = ref("");
 
-
+let errror = ref(null);
 
 
 
@@ -20,6 +20,7 @@ onMounted(() => {
 const closeModal = () => {
     nomNiveauScolaire.value = "";
     createModal.modal("hide");
+    errror.value = null;
 };
 
 
@@ -32,8 +33,9 @@ const soumettre = () => {
             useSwallSuccess("Niveau scolaire ajouté avec succès")
 
         },onError: (errors) => {
-           console.log(errors)
+            errror.value = errors.nom ;
             useSwallError(errors.nom)
+
         }
 
     })
@@ -65,6 +67,9 @@ const soumettre = () => {
                                     class="form-control"
                                     v-model="nomNiveauScolaire"
                                 />
+                            </div>
+                            <div v-if="errror">
+                                <span class="text-danger">{{errror}}</span>
                             </div>
                         </form>
                     </div>
