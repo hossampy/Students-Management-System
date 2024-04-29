@@ -94,7 +94,39 @@ const modalClosed = ()=>{
     editingElementId.value = null;
     showModal.value = false
 }
+const deletelevel = async (id) => {
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: 'zone de confirmation',
+        text: "Voulez-vous vraiment supprimer ce niveau scolaire?",
+        showCancelButton: true,
+        confirmButtonText: 'Oui',
+        cancelButtonText: 'Non',
+    });
 
+    if (result.isConfirmed) {
+        Inertia.delete(route("niveauScolaire.destroy", { niveauScolaire: id }), {
+            onSuccess: (response) => {
+                useSwallSuccess("Niveau scolaire supprimé avec succès!");
+            },
+            onError: (error) => {
+                const errorMessage = error.error ?? "Une erreur a été rencontrée";
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: errorMessage
+                });
+            },
+        });
+    }
+};
+
+
+
+
+
+
+/*
 const deletelevel = (id) => {
     if (confirm('Are you sure you want to delete this level?')) {
         axios.post(
@@ -110,8 +142,8 @@ const deletelevel = (id) => {
                 // Optionally, you can reload the page after successful deletion
                 // window.location.reload();
                 // Reload the page without preserving the component state
-
                 Inertia.reload({preserveState: false});
+
 
             })
             .catch((error) => {
@@ -120,7 +152,7 @@ const deletelevel = (id) => {
                 useSwallError(error.response.data.message ?? "Une erreur a été rencontrée");
             });
     }
-};
+};*/
 
 </script>
 

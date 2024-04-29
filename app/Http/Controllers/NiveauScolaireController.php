@@ -80,7 +80,7 @@ class NiveauScolaireController extends Controller
     public function destroy(NiveauScolaire $niveauScolaire)
     {
         if ($niveauScolaire->etudiants->count() > 0) {
-            return redirect()->route('niveauScolaire.index')->with('error', 'Impossible de supprimer ce niveau scolaire car il est associé à des étudiants');
+            return redirect()->route('niveauScolaire.index')->withErrors(['error' => 'Impossible de supprimer ce niveau scolaire car il est associé à des étudiants']);
         };
         $niveauScolaire->delete();
         return redirect()->route('niveauScolaire.index')->with('success', 'Niveau scolaire supprimé avec succès');
