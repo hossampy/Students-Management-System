@@ -104,7 +104,8 @@ const update = () => {
         .then((response) => {
             // Handle success response
             // Display a success message using useSwallSuccess
-            useSwallSuccess("Niveau scolaire mis à jour avec succès!");
+            useSwallSuccess("Niveau scolaire mis à jour avec succès! , just wait a moment please");
+
             // Close the modal after successful update
             closeModal();
         })

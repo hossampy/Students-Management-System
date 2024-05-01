@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\etudiant;
+use App\Models\NiveauScolaire;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,9 +12,27 @@ class EtudiantController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    { $etudiants = etudiant::with( 'niveau_scolaire')->get();
-     return Inertia::render('Etudiant/index', ['etudiants'=>$etudiants]);
+    public function index(Request $request)
+    {
+
+        $search = $request->search;
+        $filter = $request->filter;
+        $per_page = $request->per_page;
+        $etudiants = etudiant::with( 'niveau_scolaire')
+            ->when($search, function ($query, $search) {
+               $query->where('nom', 'LIKE', '%'.$search.'%')
+                    ->orWhere('prenom', 'LIKE', '%'.$search.'%');
+            })->when($filter, function ($query, $filter) {
+                $query->where('niveau_scolaire_id', $filter);
+            })->paginate($per_page);
+
+        $niveauScolaires =NiveauScolaire::all();
+        return Inertia::render('Etudiant/index', [
+            'etudiants' => $etudiants,
+            'niveauScolaires' => $niveauScolaires,
+            'filter' => $request->all("search", "filter", "per_page"),
+        ]);
+
     }
 
     /**
