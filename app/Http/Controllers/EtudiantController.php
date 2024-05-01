@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\etudiant;
 use App\Models\NiveauScolaire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class EtudiantController extends Controller
@@ -38,9 +39,11 @@ class EtudiantController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request ,NiveauScolaire $niveauScolaire)
     {
-        return Inertia::render('Etudiant/create');    }
+
+        $niveauScolaires =NiveauScolaire::all();
+        return Inertia::render('Etudiant/create',['niveauScolaires'=>$niveauScolaires]);    }
 
     /**
      * Store a newly created resource in storage.
@@ -48,7 +51,33 @@ class EtudiantController extends Controller
     public function store(Request $request)
     {
 
-    }
+        $validatedData = $request->validate([
+            "nom" => "required",
+            "prenom" => "required",
+            "sexe" => "required",
+            "age" => "required",
+            "niveauScolaire" => "required|",
+        ]);
+        try {
+            DB::beginTransaction();
+
+      $etudiant=etudiant::create([ "nom" => $request->nom, "prenom" => $request->prenom, "sexe" => $request->sexe, "age" => $request->age, "niveau_scolaire_id" => $request->niveauScolaire]);
+            if ($request->hasFile("photo")) {
+                $photo = $request->photo;
+                $fileName = $photo->getClientOriginalName();
+                $filePath = $photo->storeAs("photos", $fileName, "public");
+                $etudiant->photo = $filePath;
+                $etudiant->save();
+            }
+
+            DB::commit();
+
+        }catch (\Exception $e){
+            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement de l\'étudiant');
+        }
+
+        return redirect()->back();
+        }
 
     /**
      * Display the specified resource.
