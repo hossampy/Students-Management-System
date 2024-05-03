@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\etudiant;
 use App\Models\NiveauScolaire;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -72,8 +73,8 @@ class EtudiantController extends Controller
 
             DB::commit();
 
-        }catch (\Exception $e){
-            return back()->with('error', 'Une erreur est survenue lors de l\'enregistrement de l\'étudiant');
+        }catch (Exception $e){
+            DB::rollback();
         }
 
         return redirect()->back();

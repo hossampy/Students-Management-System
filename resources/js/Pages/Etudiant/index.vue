@@ -19,9 +19,9 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="card-title">
-                                    <button class="btn btn-primary">
+                                    <Link :href="route('etudiant.create')" class="btn btn-primary">
                                         <i class="fa fa-plus"></i> Nouveau
-                                    </button>
+                                    </Link>
 
                                 </div>
 
@@ -43,6 +43,9 @@
                                     <thead>
                                     <tr>
                                         <th>
+
+                                        </th>
+                                        <th>
                                             <p>etudiant</p>
                                             <input @keyup="search" type="text" v-model="searchEtudiant" class="form-control">
                                         </th>
@@ -59,7 +62,7 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="etudiant in prop.etudiants.data">
-                                        <td>{{ etudiant.nom }} {{ etudiant.prenom }}</td>
+                                        <td><img :src="showpicture(etudiant)" class="img-fluid" style="width: 50px;"></td>                                        <td>{{ etudiant.nom }} {{ etudiant.prenom }}</td>
                                         <td>{{ etudiant.niveau_scolaire.nom }}</td>
                                         <td>
                                             <div class="d-flex justify-items-center">
@@ -97,6 +100,7 @@ import {onMounted, ref} from 'vue';
 import Layouts from "@/Layouts/MainLayout.vue";
 import Pagination from "@/Shared/Pagination.vue";
 import {Inertia} from "@inertiajs/inertia";
+import CreateNiveauScolaire from "@/Pages/NiveauScolaire/CreateNiveauScolaire.vue";
 const prop =defineProps({
     etudiants: Object,
     niveauScolaires: Array,
@@ -124,8 +128,15 @@ const search = _.throttle(function(){
 
 
 
+const showpicture = (etudiant) => {
+    if (etudiant.photo) {
+        return 'storage/' + etudiant.photo;
+    } else {
+        return etudiant.sexe == 'M' ? 'http://127.0.0.1:8000/storage/photos/man.jpeg' : 'http://127.0.0.1:8000/storage/photos/woman.jpeg';
 
 
+    }
+}
 
 
 /*
