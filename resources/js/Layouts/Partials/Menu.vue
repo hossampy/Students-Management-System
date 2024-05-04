@@ -14,13 +14,13 @@
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
                     <img
-                        src="~admin-lte/dist/img/user2-160x160.jpg"
+                        src="https://yt3.ggpht.com/ysLHmrLE5AZ6iypekgvwdSouurPDzR6ShhKpGyrJsewZDA-HjhJEqN7oURLQ5gOwyQwmkV4B=s88-c-k-c0x00ffffff-no-rj"
                         class="img-circle elevation-2"
                         alt="User Image"
                     />
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">Alexander Pierce</a>
+                    <a href="#" class="d-block">Hossam</a>
                 </div>
             </div>
 

@@ -91,9 +91,15 @@ class EtudiantController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(etudiant $student)
+    public function edit(etudiant $etudiant)
     {
-        return Inertia::render('Etudiant/edit');
+        $nivelScolaires = NiveauScolaire::all();
+
+        return Inertia::render('Etudiant/edit',[
+            'etudiant' => $etudiant,
+            'niveauScolaires' => $nivelScolaires
+
+        ]);
 
     }
 
