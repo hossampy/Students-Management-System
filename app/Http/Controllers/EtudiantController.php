@@ -106,10 +106,37 @@ class EtudiantController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, etudiant $student)
-    {
-        //
+    public function update(Request $request, etudiant $etudiant)
+    {  $validatedData = $request->validate([
+        "nom" => "required",
+        "prenom" => "required",
+        "sexe" => "required",
+        "age" => "required",
+        "niveauScolaire" => "required|",
+    ]);
+        try {
+            DB::beginTransaction();
+
+            $etudiant->update([ "nom" => $request->nom, "prenom" => $request->prenom, "sexe" => $request->sexe, "age" => $request->age, "niveau_scolaire_id" => $request->niveauScolaire]);
+            $etudiant->save();
+            if ($request->hasFile("photo")) {
+                $photo = $request->photo;
+                $fileName = $photo->getClientOriginalName();
+                $filePath = $photo->storeAs("photos", $fileName, "public");
+                $etudiant->photo = $filePath;
+                $etudiant->save();
+            }
+
+            DB::commit();
+
+        }catch (Exception $e){
+            DB::rollback();
+        }
+
+        return redirect()->route('etudiant.index');
     }
+
+
 
     /**
      * Remove the specified resource from storage.

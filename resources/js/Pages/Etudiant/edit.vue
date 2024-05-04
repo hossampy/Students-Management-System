@@ -3,6 +3,7 @@ import Layouts from "@/Layouts/MainLayout.vue";
 import { useForm } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 import { useSwallSuccess, useSwallError } from '../../Composables/alert';
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({
     niveauScolaires: Array,
@@ -22,8 +23,9 @@ const form = useForm({
 
 const soumettre = ()=>{
 
-    form.post(route("etudiant.update", { etudiant : props.etudiant.id }), {
+    form.put(route("etudiant.update", { etudiant: props.etudiant.id}), {
         onSuccess: (page)=>{
+            console.log(props.etudiant.id)
             useSwallSuccess("Etudiant mis à jour avec succès!")
         },
         onError: (errors)=>{
@@ -116,11 +118,12 @@ const previewImage = (event)=>{
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card-footer">
+                                        <button  class="btn btn-success" form="formulaireEdition">Valider les modifications</button>
+                                    </div>
                                 </form>
                             </div>
-                            <div class="card-footer">
-                                <button  class="btn btn-success" form="formulaireEdition">Valider les modifications</button>
-                            </div>
+
                         </div>
                     </div>
                 </div>
