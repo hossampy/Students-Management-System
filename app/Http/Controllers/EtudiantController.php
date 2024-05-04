@@ -7,6 +7,7 @@ use App\Models\NiveauScolaire;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class EtudiantController extends Controller
@@ -20,15 +21,15 @@ class EtudiantController extends Controller
         $search = $request->search;
         $filter = $request->filter;
         $per_page = $request->per_page;
-        $etudiants = etudiant::with( 'niveau_scolaire')
+        $etudiants = etudiant::with('niveau_scolaire')
             ->when($search, function ($query, $search) {
-               $query->where('nom', 'LIKE', '%'.$search.'%')
-                    ->orWhere('prenom', 'LIKE', '%'.$search.'%');
+                $query->where('nom', 'LIKE', '%' . $search . '%')
+                    ->orWhere('prenom', 'LIKE', '%' . $search . '%');
             })->when($filter, function ($query, $filter) {
                 $query->where('niveau_scolaire_id', $filter);
             })->paginate($per_page);
 
-        $niveauScolaires =NiveauScolaire::all();
+        $niveauScolaires = NiveauScolaire::all();
         return Inertia::render('Etudiant/index', [
             'etudiants' => $etudiants,
             'niveauScolaires' => $niveauScolaires,
@@ -40,11 +41,12 @@ class EtudiantController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request ,NiveauScolaire $niveauScolaire)
+    public function create(Request $request, NiveauScolaire $niveauScolaire)
     {
 
-        $niveauScolaires =NiveauScolaire::all();
-        return Inertia::render('Etudiant/create',['niveauScolaires'=>$niveauScolaires]);    }
+        $niveauScolaires = NiveauScolaire::all();
+        return Inertia::render('Etudiant/create', ['niveauScolaires' => $niveauScolaires]);
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -62,7 +64,7 @@ class EtudiantController extends Controller
         try {
             DB::beginTransaction();
 
-      $etudiant=etudiant::create([ "nom" => $request->nom, "prenom" => $request->prenom, "sexe" => $request->sexe, "age" => $request->age, "niveau_scolaire_id" => $request->niveauScolaire]);
+            $etudiant = etudiant::create(["nom" => $request->nom, "prenom" => $request->prenom, "sexe" => $request->sexe, "age" => $request->age, "niveau_scolaire_id" => $request->niveauScolaire]);
             if ($request->hasFile("photo")) {
                 $photo = $request->photo;
                 $fileName = $photo->getClientOriginalName();
@@ -73,12 +75,12 @@ class EtudiantController extends Controller
 
             DB::commit();
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             DB::rollback();
         }
 
-        return redirect()->back();
-        }
+        return redirect()->route('etudiant.index');
+    }
 
     /**
      * Display the specified resource.
@@ -95,7 +97,7 @@ class EtudiantController extends Controller
     {
         $nivelScolaires = NiveauScolaire::all();
 
-        return Inertia::render('Etudiant/edit',[
+        return Inertia::render('Etudiant/edit', [
             'etudiant' => $etudiant,
             'niveauScolaires' => $nivelScolaires
 
@@ -107,17 +109,18 @@ class EtudiantController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, etudiant $etudiant)
-    {  $validatedData = $request->validate([
-        "nom" => "required",
-        "prenom" => "required",
-        "sexe" => "required",
-        "age" => "required",
-        "niveauScolaire" => "required|",
-    ]);
+    {
+        $validatedData = $request->validate([
+            "nom" => "required",
+            "prenom" => "required",
+            "sexe" => "required",
+            "age" => "required",
+            "niveauScolaire" => "required|",
+        ]);
         try {
             DB::beginTransaction();
 
-            $etudiant->update([ "nom" => $request->nom, "prenom" => $request->prenom, "sexe" => $request->sexe, "age" => $request->age, "niveau_scolaire_id" => $request->niveauScolaire]);
+            $etudiant->update(["nom" => $request->nom, "prenom" => $request->prenom, "sexe" => $request->sexe, "age" => $request->age, "niveau_scolaire_id" => $request->niveauScolaire]);
             $etudiant->save();
             if ($request->hasFile("photo")) {
                 $photo = $request->photo;
@@ -129,7 +132,7 @@ class EtudiantController extends Controller
 
             DB::commit();
 
-        }catch (Exception $e){
+        } catch (Exception $e) {
             DB::rollback();
         }
 
@@ -137,12 +140,19 @@ class EtudiantController extends Controller
     }
 
 
-
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(etudiant $student)
+    public function destroy(etudiant $etudiant)
     {
-        //
+        if ($etudiant->photo) {
+            if (Storage::exists($etudiant->photo)) {
+                Storage::delete($etudiant->photo);
+            }
+        }
+        $etudiant->delete();
+        return redirect()->back();
     }
+
+
 }

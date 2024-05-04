@@ -69,7 +69,7 @@
                                                 <Link :href="route('etudiant.edit',{etudiant:etudiant.id})" class="btn btn-info mr-2">
                                                     <i class="fas fa-pen"></i>
                                                 </Link>
-                                                <button class="btn btn-danger">
+                                                <button class="btn btn-danger" @click="supprimer(etudiant.id)">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                             </div>
@@ -101,6 +101,7 @@ import Layouts from "@/Layouts/MainLayout.vue";
 import Pagination from "@/Shared/Pagination.vue";
 import {Inertia} from "@inertiajs/inertia";
 import CreateNiveauScolaire from "@/Pages/NiveauScolaire/CreateNiveauScolaire.vue";
+import {useSwallSuccess} from "@/Composables/alert.js";
 const prop =defineProps({
     etudiants: Object,
     niveauScolaires: Array,
@@ -137,8 +138,45 @@ const showpicture = (etudiant) => {
 
     }
 }
+/*
+const supprimer = (id) => {
+    console.log(id);
+    if (confirm("Voulez-vous vraiment supprimer cet étudiant ?")) {
+        Inertia.delete(route('etudiant.destroy', {etudiant: id}), {}, {
+            preserveState: true
+        });
+    }
+}
+*/
 
 
+
+const supprimer = async (id) => {
+    const result = await Swal.fire({
+        icon: 'warning',
+        title: 'zone de confirmation',
+        text: "Voulez-vous vraiment supprimer ce etudiant ?",
+        showCancelButton: true,
+        confirmButtonText: 'Oui',
+        cancelButtonText: 'Non',
+    });
+
+    if (result.isConfirmed) {
+        Inertia.delete(route("etudiant.destroy", { etudiant: id }), {
+            onSuccess: (response) => {
+                useSwallSuccess("Etudiant supprimé avec succès!");
+            },
+            onError: (error) => {
+                const errorMessage = error.error ?? "Une erreur a été rencontrée";
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: errorMessage
+                });
+            },
+        });
+    }
+};
 /*
 onMounted(() => {
     console.log(prop.etudiants);
